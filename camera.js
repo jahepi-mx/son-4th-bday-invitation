@@ -1,0 +1,26 @@
+
+class Camera {
+
+    constructor() {
+        this.viewPortWidth = 400;
+        this.viewPortHeight = 400;
+        this.worldWidth = 1200;
+        this.worldHeight = 400;
+        this.offset = new Vector();
+        this.offset.x = 0;
+        this.offset.y = this.viewPortHeight;
+    }
+
+    update(pos) {
+        var offsetX = pos.x - this.viewPortWidth * 0.5;
+        var leftLimit = 0;
+        var rightLimit = (this.worldWidth - this.viewPortWidth * 0.5) - this.viewPortWidth * 0.5;
+        if (offsetX <= leftLimit) {
+            this.offset.x = leftLimit;
+        } else if (offsetX >= rightLimit) {
+            this.offset.x = rightLimit;
+        } else {
+            this.offset.x = offsetX;
+        }
+    }
+}

@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <script src="vector.js"></script>
+        <script src="camera.js"></script>
+        <script src="chase.js"></script>
+        <script src="block.js"></script>
+        <script src="background.js"></script>
+        <script>
+        var canvas = null;
+        var context = null;
+        var camera = new Camera();
+        var chase = new Chase(camera);
+        var background = new Background(camera, chase);
+        var prevTime = 0;
+        var blocks = [];
+        window.onload = function() {
+            canvas = document.getElementById("canvas");
+            canvas.style = "background-color: #333";
+            canvas.width = camera.viewPortWidth;
+            canvas.height = camera.viewPortHeight;
+            context = canvas.getContext("2d");
+            document.onkeydown = onKeyDown;
+            blocks = [new Block(camera, 0, 200), new Block(camera, 800, 200)];
+            requestAnimationFrame(update);
+        }
+        function onKeyDown(key) {
+            if (key.keyCode == 37) {
+                chase.left();
+            }
+            if (key.keyCode == 39) {
+                chase.right();
+            }
+        }
+
+        function update(time) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.imageSmoothingEnabled = false;
+
+            var dt = (time - prevTime) / 1000;
+            var fps = 1 / dt;
+
+            background.update(dt);
+            background.render(context);
+
+            chase.update(dt);
+            chase.render(context);
+
+            for (let block of blocks) {
+                block.update(dt);
+                block.render(context);
+            }
+
+            prevTime = time;
+            requestAnimationFrame(update);
+        }
+        </script>
+    </head>
+    <body>
+        <canvas id="canvas" name="canvas" />
+    </body>
+</html>

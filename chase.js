@@ -7,7 +7,7 @@ class Chase {
         this.size = new Vector();
         this.size.x = 30;
         this.size.y = 30;
-        this.position.x = 600; //this.camera.viewPortWidth * 0.5; //this.size.x;
+        this.position.x = this.size.x;
         this.position.y = this.size.y;
     }
 

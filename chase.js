@@ -18,21 +18,74 @@ class Chase {
         this.stillAnimation = new Animation(4, 2);
         this.walkAnimation = new Animation(4, 2);
         this.shotAnimation = new Animation(7, 2);
+        this.jumpAnimation = new Animation(5, 2);
+        this.barkAnimation = new Animation(5, 2);
+        this.flipAnimation = new Animation(5, 2);
+        this.kickAnimation = new Animation(4, 2);
+        this.punchAnimation = new Animation(9, 2);
+        this.jumpAnimation.stopAtSequenceNumber(1, this.onStopJump.bind(this));
+        this.barkAnimation.stopAtSequenceNumber(1, this.onStopBark.bind(this));
+        this.flipAnimation.stopAtSequenceNumber(1, this.onStopFlip.bind(this));
+        this.kickAnimation.stopAtSequenceNumber(1, this.onStopKick.bind(this));
+        this.punchAnimation.stopAtSequenceNumber(1, this.onStopPunch.bind(this));
 
         this.eventTime = 0;
-        this.eventTypes = ["run", "walk", "still", "shot"];
+        this.eventTypes = ["run", "walk", "still", "shot", "jump", "bark", "flip", "kick", "punch"];
         this.eventType = this.eventTypes[0];
+        this.balls = [];
+        this.shotTime = 0;
 
     }
 
-    update(dt) {
+    onStopJump() {
+        this.eventTime = 0;
+        this.jumpAnimation.stop();
+    }
 
+    onStopBark() {
+        this.eventTime = 0;
+        this.barkAnimation.stop();
+    }
+
+    onStopFlip() {
+        this.eventTime = 0;
+        this.flipAnimation.stop();
+    }
+
+    onStopKick() {
+        this.eventTime = 0;
+        this.kickAnimation.stop();
+    }
+
+    onStopPunch() {
+        this.eventTime = 0;
+        this.punchAnimation.stop();
+    }
+
+    update(dt) {
+        
         this.eventTime -= dt;
         if (this.eventTime <= 0) {
             this.eventType = this.eventTypes[parseInt(this.eventTypes.length * Math.random())];
             this.eventTime = 5 + Math.random() * 3;
             this.direction.x = Math.random() < 0.5 ? 1 : -1;
             this.velocity.x = Math.abs(this.velocity.x) * this.direction.x;
+            this.shotTime = 0;
+            if (this.eventType == "jump") {
+                this.jumpAnimation.reset();
+            }
+            if (this.eventType == "bark") {
+                this.barkAnimation.reset();
+            }
+            if (this.eventType == "flip") {
+                this.flipAnimation.reset();
+            }
+            if (this.eventType == "kick") {
+                this.kickAnimation.reset();
+            }
+            if (this.eventType == "punch") {
+                this.punchAnimation.reset();
+            }
         }
 
         var newPos = this.position.add(this.velocity.mul(dt));
@@ -61,6 +114,14 @@ class Chase {
         if (this.eventType == "still" && Math.abs(this.velocity.x) <= 5) {
             this.velocity.x = 0;
         }
+        if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
+            this.velocity.x = 0;
+            this.shotTime -= dt;
+            if (this.shotTime < 0) {
+                this.shotTime = 0.5;
+                this.balls.push(new Ball(this.camera, this.position.x, this.position.y, this.direction.x));
+            }
+        }
 
         this.camera.update(this.position);
 
@@ -68,13 +129,37 @@ class Chase {
         this.stillAnimation.update(dt);
         this.walkAnimation.update(dt);
         this.shotAnimation.update(dt);
+        this.jumpAnimation.update(dt);
+        this.barkAnimation.update(dt);
+        this.flipAnimation.update(dt);
+        this.kickAnimation.update(dt);
+        this.punchAnimation.update(dt);
 
         this.velocity.mulSelf(this.friction);
+
+        for (var a = 0; a < this.balls.length; a++) {
+            this.balls[a].update(dt);
+            if (this.balls[a].dispose) {
+                this.balls.splice(a--, 1);
+            }
+        }
     }
 
     render(context) {
         var image = "";
-        if (Math.abs(this.velocity.x) <= 5) {
+        if (this.eventType == "jump") {
+            image = (this.direction.x > 0 ? "" : "left_") + "jump_" + (this.jumpAnimation.getFrame() + 1);
+        } else if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
+            image = (this.direction.x > 0 ? "" : "left_") + "shot_" + (this.shotAnimation.getFrame() + 1);
+        } else if (this.eventType == "bark" && Math.abs(this.velocity.x) <= 5) {
+            image = (this.direction.x > 0 ? "" : "left_") + "bark_" + (this.barkAnimation.getFrame() + 1);
+        } else if (this.eventType == "flip" && Math.abs(this.velocity.x) <= 5) {
+            image = (this.direction.x > 0 ? "" : "left_") + "flip_" + (this.flipAnimation.getFrame() + 1);
+        } else if (this.eventType == "kick" && Math.abs(this.velocity.x) <= 5) {
+            image = (this.direction.x > 0 ? "" : "left_") + "kick_" + (this.kickAnimation.getFrame() + 1);
+        } else if (this.eventType == "punch" && Math.abs(this.velocity.x) <= 5) {
+            image = (this.direction.x > 0 ? "" : "left_") + "punch_" + (this.punchAnimation.getFrame() + 1);
+        } else if (Math.abs(this.velocity.x) <= 5) {
             image = (this.direction.x > 0 ? "" : "left_") + "still_" + (this.stillAnimation.getFrame() + 1);
         } else if (Math.abs(this.velocity.x) <= 40) {
             image = (this.direction.x > 0 ? "" : "left_") + "walk_" + (this.walkAnimation.getFrame() + 1);
@@ -87,15 +172,11 @@ class Chase {
 
         context.drawImage(this.assets.spritesAtlas, this.atlas.sprites[image].x, this.atlas.sprites[image].y, this.atlas.sprites[image].width, this.atlas.sprites[image].height, 
             this.position.x - this.camera.offset.x - this.size.x * 0.5,  this.camera.offset.y - this.position.y - this.size.y * 0.5, this.size.x, this.size.y);
-    }
 
-    left() {
-        this.direction.x = -1;
-        this.velocity.x = -200;
-    }
-
-    right() {
-        this.direction.x = 1;
-        this.velocity.x = 200;
+        for (let ball of this.balls) {
+            ball.render(context);
+        }
+        
+        
     }
 }

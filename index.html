@@ -24,7 +24,6 @@
         var context = null;
         var camera = new Camera();
         var chase = new Chase(camera);
-        var ball = new Ball(camera, 50, 100, 1);
         var backgrounds = [];
         var prevTime = 0;
         var blocks = [];
@@ -55,17 +54,7 @@
                 new Background(camera, chase, "trees", 0.8, 120, 150),
                 new Background(camera, chase, "floors", 1, 65 * 0.5, 65)
             ];
-            document.onkeydown = onKeyDown;
             requestAnimationFrame(update);
-        }
-
-        function onKeyDown(key) {
-            if (key.keyCode == 37) {
-                chase.left();
-            }
-            if (key.keyCode == 39) {
-                chase.right();
-            }
         }
 
         function update(time) {
@@ -80,9 +69,6 @@
                 background.render(context);
             }
 
-            ball.update(dt);
-            ball.render(context);
-            
             chase.update(dt);
             chase.render(context);
 

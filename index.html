@@ -17,13 +17,14 @@
         <script src="vector.js"></script>
         <script src="camera.js"></script>
         <script src="chase.js"></script>
-        <script src="block.js"></script>
+        <script src="ball.js"></script>
         <script src="background.js"></script>
         <script>
         var canvas = null;
         var context = null;
         var camera = new Camera();
-        var chase = new Chase(camera);;
+        var chase = new Chase(camera);
+        var ball = new Ball(camera, 50, 100, 1);
         var backgrounds = [];
         var prevTime = 0;
         var blocks = [];
@@ -32,7 +33,6 @@
             canvas.width = camera.viewPortWidth;
             canvas.height = camera.viewPortHeight;
             context = canvas.getContext("2d");
-            blocks = [new Block(camera, 0, 200), new Block(camera, 800, 200)];
             var assets = Assets.getInstance();
             assets.loadAll(onLoadAssets, onDownloadAssets);
         }
@@ -80,13 +80,11 @@
                 background.render(context);
             }
 
+            ball.update(dt);
+            ball.render(context);
+            
             chase.update(dt);
             chase.render(context);
-
-            for (let block of blocks) {
-                block.update(dt);
-                block.render(context);
-            }
 
             prevTime = time;
             requestAnimationFrame(update);

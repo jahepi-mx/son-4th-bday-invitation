@@ -1,5 +1,19 @@
 <html>
     <head>
+        <style type="text/css">
+            #canvas { 
+                height: 100vh; 
+                width: 100vw;
+                display: block;
+                position: fixed; 
+                top: 0;
+                left: 0;
+                z-index: -1;
+            }
+        </style>
+        <script src="assets.js"></script>
+        <script src="atlas.js"></script>
+        <script src="animation.js"></script>
         <script src="vector.js"></script>
         <script src="camera.js"></script>
         <script src="chase.js"></script>
@@ -9,20 +23,42 @@
         var canvas = null;
         var context = null;
         var camera = new Camera();
-        var chase = new Chase(camera);
-        var background = new Background(camera, chase);
+        var chase = new Chase(camera);;
+        var backgrounds = [];
         var prevTime = 0;
         var blocks = [];
         window.onload = function() {
             canvas = document.getElementById("canvas");
-            canvas.style = "background-color: #333";
             canvas.width = camera.viewPortWidth;
             canvas.height = camera.viewPortHeight;
             context = canvas.getContext("2d");
-            document.onkeydown = onKeyDown;
             blocks = [new Block(camera, 0, 200), new Block(camera, 800, 200)];
+            var assets = Assets.getInstance();
+            assets.loadAll(onLoadAssets, onDownloadAssets);
+        }
+
+        function onDownloadAssets() {
+        }
+            
+        function onLoadAssets() {
+            var atlas = Atlas.getInstance();
+            atlas.loadAll(onLoadAtlas, onDownloadAtlas);
+        }
+
+        function onDownloadAtlas() {
+        }
+            
+        function onLoadAtlas() {
+            backgrounds = [
+                new Background(camera, chase, "clouds", 0.4, camera.viewPortHeight - 300 * 0.5, 300), 
+                new Background(camera, chase, "mountains", 0.6, 200, 150), 
+                new Background(camera, chase, "trees", 0.8, 120, 150),
+                new Background(camera, chase, "floors", 1, 65 * 0.5, 65)
+            ];
+            document.onkeydown = onKeyDown;
             requestAnimationFrame(update);
         }
+
         function onKeyDown(key) {
             if (key.keyCode == 37) {
                 chase.left();
@@ -39,8 +75,10 @@
             var dt = (time - prevTime) / 1000;
             var fps = 1 / dt;
 
-            background.update(dt);
-            background.render(context);
+            for (let background of backgrounds) {
+                background.update(dt);
+                background.render(context);
+            }
 
             chase.update(dt);
             chase.render(context);
@@ -55,7 +93,10 @@
         }
         </script>
     </head>
-    <body>
+    <body style="margin:0; padding: 0">
+        <div style="z-index: 0;">
+            <h3>OK</h3>
+        </div>
         <canvas id="canvas" name="canvas" />
     </body>
 </html>

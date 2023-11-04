@@ -2,9 +2,9 @@
 class Camera {
 
     constructor() {
-        this.viewPortWidth = 400;
+        this.viewPortWidth = 480;
         this.viewPortHeight = 400;
-        this.worldWidth = 1200;
+        this.worldWidth = 2000;
         this.worldHeight = 400;
         this.offset = new Vector();
         this.offset.x = 0;

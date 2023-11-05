@@ -22,7 +22,7 @@ class Chase {
         this.barkAnimation = new Animation(5, 2);
         this.flipAnimation = new Animation(5, 2);
         this.kickAnimation = new Animation(4, 2);
-        this.punchAnimation = new Animation(9, 2);
+        this.punchAnimation = new Animation(12, 2);
         this.jumpAnimation.stopAtSequenceNumber(1, this.onStopJump.bind(this));
         this.barkAnimation.stopAtSequenceNumber(1, this.onStopBark.bind(this));
         this.flipAnimation.stopAtSequenceNumber(1, this.onStopFlip.bind(this));

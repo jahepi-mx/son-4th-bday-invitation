@@ -146,7 +146,7 @@ class Chase {
     }
 
     render(context) {
-        var image = "";
+        var image = null;
         if (this.eventType == "jump") {
             image = (this.direction.x > 0 ? "" : "left_") + "jump_" + (this.jumpAnimation.getFrame() + 1);
         } else if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
@@ -167,16 +167,12 @@ class Chase {
             image = (this.direction.x > 0 ? "" : "left_") + "run_" + (this.runAnimation.getFrame() + 1);
         }
 
-        //context.fillStyle = "#00ff00";
-        //context.fillRect(this.position.x - this.camera.offset.x - this.size.x * 0.5,  this.camera.offset.y - this.position.y - this.size.y * 0.5, this.size.x, this.size.y);
-
-        context.drawImage(this.assets.spritesAtlas, this.atlas.sprites[image].x, this.atlas.sprites[image].y, this.atlas.sprites[image].width, this.atlas.sprites[image].height, 
-            this.position.x - this.camera.offset.x - this.size.x * 0.5,  this.camera.offset.y - this.position.y - this.size.y * 0.5, this.size.x, this.size.y);
-
+        if (image != null) {
+            context.drawImage(this.assets.spritesAtlas, this.atlas.sprites[image].x, this.atlas.sprites[image].y, this.atlas.sprites[image].width, this.atlas.sprites[image].height, 
+                this.position.x - this.camera.offset.x - this.size.x * 0.5,  this.camera.offset.y - this.position.y - this.size.y * 0.5, this.size.x, this.size.y);
+        }
         for (let ball of this.balls) {
             ball.render(context);
         }
-        
-        
     }
 }

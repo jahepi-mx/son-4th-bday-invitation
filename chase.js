@@ -30,7 +30,7 @@ class Chase {
         this.punchAnimation.stopAtSequenceNumber(1, this.onStopPunch.bind(this));
 
         this.eventTime = 0;
-        this.eventTypes = ["run", "walk", "still", "shot", "jump", "bark", "flip", "kick", "punch"];
+        this.eventTypes = ["run", "walk", "still", "shot", "jump", "bark", "run", "flip", "kick", "walk", "punch"];
         this.eventType = this.eventTypes[0];
         this.balls = [];
         this.shotTime = 0;
@@ -106,13 +106,13 @@ class Chase {
         }
 
         if (this.eventType == "run" && Math.abs(this.velocity.x) <= 250) {
-            this.velocity.x = 250 * this.direction.x;
+            this.velocity.x += (250 * this.direction.x - this.velocity.x) * dt;
         }
         if (this.eventType == "walk" && Math.abs(this.velocity.x) <= 40) {
-            this.velocity.x = 40 * this.direction.x;
+            this.velocity.x += (40 * this.direction.x - this.velocity.x) * dt;
         }
         if (this.eventType == "still" && Math.abs(this.velocity.x) <= 5) {
-            this.velocity.x = 0;
+            this.velocity.x += (-this.velocity.x) * dt;
         }
         if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
             this.velocity.x = 0;

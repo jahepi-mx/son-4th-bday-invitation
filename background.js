@@ -21,9 +21,10 @@ class Background {
         this.ratio = ratio;
     }
 
-    update(dt, cameraPos) {
+    update(dt) {
         var diffA = this.positionA.x - this.camera.offset.x * this.ratio;
         var diffB = this.positionB.x - this.camera.offset.x * this.ratio;
+        var cameraPos = this.camera.position;
         var fix = this.camera.offset.x * (1 - this.ratio);
         if (diffA < -this.camera.viewPortWidth * 0.5) {
             this.positionA.x = cameraPos.x + this.camera.viewPortWidth - fix;

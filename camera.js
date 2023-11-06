@@ -9,10 +9,11 @@ class Camera {
         this.offset = new Vector();
         this.offset.x = 0;
         this.offset.y = this.viewPortHeight;
+        this.position = new Vector();
     }
 
-    update(pos) {
-        var offsetX = pos.x - this.viewPortWidth * 0.5;
+    update() {
+        var offsetX = this.position.x - this.viewPortWidth * 0.5;
         var leftLimit = 0;
         var rightLimit = (this.worldWidth - this.viewPortWidth * 0.5) - this.viewPortWidth * 0.5;
         if (offsetX <= leftLimit) {

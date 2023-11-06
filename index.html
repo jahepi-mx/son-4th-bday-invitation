@@ -27,7 +27,6 @@
         var prevTime = 0;
         var bots = [];
         var focusTime = 0;
-        var focusVector = new Vector();
         var bot = null;
 
         window.onload = function() {
@@ -73,13 +72,13 @@
                 bot = bots[parseInt(bots.length * Math.random())];
             }
 
-            focusVector.x += (bot.position.x - focusVector.x) * dt;
-            focusVector.y += (bot.position.y - focusVector.y) * dt;
+            camera.position.x += (bot.position.x - camera.position.x) * dt;
+            camera.position.y += (bot.position.y - camera.position.y) * dt;
 
-            camera.update(focusVector);
+            camera.update();
 
             for (let background of backgrounds) {
-                background.update(dt, focusVector);
+                background.update(dt);
                 background.render(context);
             }
 

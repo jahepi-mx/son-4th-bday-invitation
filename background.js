@@ -1,7 +1,6 @@
 class Background {
-    constructor(camera, player, image, ratio, y, height) {
+    constructor(camera, image, ratio, y, height) {
         this.camera = camera;
-        this.player = player;
         this.atlas = Atlas.getInstance();
         this.assets = Assets.getInstance(); 
         this.image = image;
@@ -22,25 +21,25 @@ class Background {
         this.ratio = ratio;
     }
 
-    update(dt) {
+    update(dt, cameraPos) {
         var diffA = this.positionA.x - this.camera.offset.x * this.ratio;
         var diffB = this.positionB.x - this.camera.offset.x * this.ratio;
         var fix = this.camera.offset.x * (1 - this.ratio);
         if (diffA < -this.camera.viewPortWidth * 0.5) {
-            this.positionA.x = this.player.position.x + this.camera.viewPortWidth - fix;
-            this.positionB.x = this.player.position.x - fix; 
+            this.positionA.x = cameraPos.x + this.camera.viewPortWidth - fix;
+            this.positionB.x = cameraPos.x - fix; 
         }
         if (diffB < -this.camera.viewPortWidth * 0.5) {
-            this.positionB.x = this.player.position.x + this.camera.viewPortWidth - fix;
-            this.positionA.x = this.player.position.x - fix; 
+            this.positionB.x = cameraPos.x + this.camera.viewPortWidth - fix;
+            this.positionA.x = cameraPos.x - fix; 
         }
         if (diffA > this.camera.viewPortWidth + this.camera.viewPortWidth * 0.5) {
-            this.positionA.x = this.player.position.x - this.camera.viewPortWidth - fix;
-            this.positionB.x = this.player.position.x - fix; 
+            this.positionA.x = cameraPos.x - this.camera.viewPortWidth - fix;
+            this.positionB.x = cameraPos.x - fix; 
         }
         if (diffB > this.camera.viewPortWidth + this.camera.viewPortWidth * 0.5) {
-            this.positionB.x = this.player.position.x - this.camera.viewPortWidth - fix;
-            this.positionA.x = this.player.position.x - fix; 
+            this.positionB.x = cameraPos.x - this.camera.viewPortWidth - fix;
+            this.positionA.x = cameraPos.x - fix; 
         }
     }
 

@@ -23,15 +23,19 @@
         var canvas = null;
         var context = null;
         var camera = new Camera();
-        var chase = new Chase(camera);
         var backgrounds = [];
         var prevTime = 0;
-        var blocks = [];
+        var bots = [];
+        var focusTime = 0;
+        var focusVector = new Vector();
+        var bot = null;
+
         window.onload = function() {
             canvas = document.getElementById("canvas");
             canvas.width = camera.viewPortWidth;
             canvas.height = camera.viewPortHeight;
             context = canvas.getContext("2d");
+            bots = [new Chase(camera), new Chase(camera)];
             var assets = Assets.getInstance();
             assets.loadAll(onLoadAssets, onDownloadAssets);
         }
@@ -49,10 +53,10 @@
             
         function onLoadAtlas() {
             backgrounds = [
-                new Background(camera, chase, "clouds", 0.4, camera.viewPortHeight - 300 * 0.5, 300), 
-                new Background(camera, chase, "mountains", 0.6, 200, 150), 
-                new Background(camera, chase, "trees", 0.8, 120, 150),
-                new Background(camera, chase, "floors", 1, 65 * 0.5, 65)
+                new Background(camera, "clouds", 0.4, camera.viewPortHeight - 300 * 0.5, 300), 
+                new Background(camera, "mountains", 0.6, 200, 150), 
+                new Background(camera, "trees", 0.8, 120, 150),
+                new Background(camera, "floors", 1, 65 * 0.5, 65)
             ];
             requestAnimationFrame(update);
         }
@@ -60,17 +64,29 @@
         function update(time) {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.imageSmoothingEnabled = false;
-
             var dt = (time - prevTime) / 1000;
             var fps = 1 / dt;
+            focusTime -= dt;
+
+            if (focusTime <= 0) {
+                focusTime = Math.random() * 10 + 10;
+                bot = bots[parseInt(bots.length * Math.random())];
+            }
+
+            focusVector.x += (bot.position.x - focusVector.x) * dt;
+            focusVector.y += (bot.position.y - focusVector.y) * dt;
+
+            camera.update(focusVector);
 
             for (let background of backgrounds) {
-                background.update(dt);
+                background.update(dt, focusVector);
                 background.render(context);
             }
 
-            chase.update(dt);
-            chase.render(context);
+            for (let tmpBot of bots) {
+                tmpBot.update(dt);
+                tmpBot.render(context);
+            }
 
             prevTime = time;
             requestAnimationFrame(update);

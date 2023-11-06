@@ -11,7 +11,7 @@ class Chase {
         this.size = new Vector();
         this.size.x = 80;
         this.size.y = 80;
-        this.position.x = this.size.x;
+        this.position.x = this.size.x + ((this.camera.worldWidth - this.size.x) - this.size.x) * Math.random();
         this.position.y = 100;
 
         this.runAnimation = new Animation(6, 2);
@@ -123,7 +123,7 @@ class Chase {
             }
         }
 
-        this.camera.update(this.position);
+        //this.camera.update(this.position);
 
         this.runAnimation.update(dt);
         this.stillAnimation.update(dt);

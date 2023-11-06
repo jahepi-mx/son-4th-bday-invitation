@@ -123,8 +123,6 @@ class Chase {
             }
         }
 
-        //this.camera.update(this.position);
-
         this.runAnimation.update(dt);
         this.stillAnimation.update(dt);
         this.walkAnimation.update(dt);

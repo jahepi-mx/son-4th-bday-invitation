@@ -150,9 +150,9 @@ class Chase {
         } else if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
             image = (this.direction.x > 0 ? "" : "left_") + "shot_" + (this.shotAnimation.getFrame() + 1);
         } else if (this.eventType == "bark" && Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "bark_" + (this.barkAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "left_" : "") + "bark_" + (this.barkAnimation.getFrame() + 1);
         } else if (this.eventType == "flip" && Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "flip_" + (this.flipAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "left_" : "") + "flip_" + (this.flipAnimation.getFrame() + 1);
         } else if (this.eventType == "kick" && Math.abs(this.velocity.x) <= 5) {
             image = (this.direction.x > 0 ? "" : "left_") + "kick_" + (this.kickAnimation.getFrame() + 1);
         } else if (this.eventType == "punch" && Math.abs(this.velocity.x) <= 5) {

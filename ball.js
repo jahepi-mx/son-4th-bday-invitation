@@ -1,5 +1,5 @@
 class Ball {
-    constructor(camera, x, y, direction) {
+    constructor(camera, x, y, direction, image) {
         this.atlas = Atlas.getInstance();
         this.assets = Assets.getInstance(); 
         this.position = new Vector();
@@ -18,6 +18,7 @@ class Ball {
         this.velocity.y = Math.random() * 300 + 100;
         this.time = 0;
         this.dispose = false;
+        this.image = image;
     }
 
     update(dt) {
@@ -37,7 +38,7 @@ class Ball {
     }
 
     render(context) {
-        var image = "ball_1";
+        var image = this.image;
         context.drawImage(this.assets.spritesAtlas, this.atlas.sprites[image].x, this.atlas.sprites[image].y, this.atlas.sprites[image].width, this.atlas.sprites[image].height, 
             this.position.x - this.camera.offset.x - this.size.x * 0.5,  this.camera.offset.y - this.position.y - this.size.y * 0.5, this.size.x, this.size.y);
     }

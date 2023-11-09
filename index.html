@@ -28,6 +28,8 @@
         <script src="vector.js"></script>
         <script src="camera.js"></script>
         <script src="chase.js"></script>
+        <script src="rubble.js"></script>
+        <script src="skye.js"></script>
         <script src="ball.js"></script>
         <script src="background.js"></script>
         <script>
@@ -45,7 +47,7 @@
             canvas.width = camera.viewPortWidth;
             canvas.height = camera.viewPortHeight;
             context = canvas.getContext("2d");
-            bots = [new Chase(camera), new Chase(camera)];
+            bots = [new Skye(camera), new Skye(camera), new Skye(camera)];
             var assets = Assets.getInstance();
             assets.loadAll(onLoadAssets, onDownloadAssets);
         }
@@ -132,13 +134,13 @@
                 <form class="bg-white shadow-md rounded px-4 pt-4 pb-4 mb-4 bg-opacity-75">
                 <div class="mb-6">
                     <label class="block text-gray-700 text-sm mb-2" for="name">
-                    Te esperamos este sábado 16 de Diciembre a partir de las 3 PM para celebrar los 4 años de Iktan.
+                    Hola, voy a cumplir 4 años y me gustaría estuvieras conmigo para divertirnos juntos.
                     </label>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                        Confirma tu asistencia!
+                    <label class="block text-gray-700 text-sm mb-2" for="name">
+                        Te esperamos el sábado 16 de Diciembre a partir de las 3 PM.
                     </label>
                     <input class="shadow appearance-none border border-green-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" type="text" placeholder="Nombre">
-                    <p id="status" class="text-green-500 text-xs italic">Escribe tu nombre.</p>
+                    <p id="status" class="text-green-500 text-xs italic">Escribe tu nombre para confirmar.</p>
                 </div>
                 <div class="flex items-center justify-between">
                     <button onclick="sendData()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">

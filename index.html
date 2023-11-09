@@ -84,6 +84,13 @@
         }
 
         function onDownloadAssets() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.imageSmoothingEnabled = false;
+            var percentage = Math.floor(Assets.getInstance().getLoadedRatio() * 100);
+            context.font = Math.floor(canvas.height * 0.05) + "px ComicalKG";
+            context.fillStyle = "#ff0000";
+            context.textAlign = "center";
+            context.fillText("Cargando recursos " + percentage + "%", canvas.width / 2, canvas.height * 0.6);
         }
             
         function onLoadAssets() {
@@ -92,6 +99,13 @@
         }
 
         function onDownloadAtlas() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.imageSmoothingEnabled = false;
+            var percentage = Math.floor(Atlas.getInstance().getLoadedRatio() * 100);
+            context.font = Math.floor(canvas.height * 0.05) + "px ComicalKG";
+            context.fillStyle = "#ff0000";
+            context.textAlign = "center";
+            context.fillText("Cargando datos " + percentage + "%", canvas.width / 2, canvas.height * 0.6);
         }
             
         function onLoadAtlas() {
@@ -183,7 +197,7 @@
                         <span style="color:red">No falten!</span>
                     </div>
                     <div class="input-group mb-3">
-                        <input id="name" name="name" type="text" class="form-control" placeholder="Escribe tu nombre y confirma" aria-label="Nombre" aria-describedby="basic-addon2">
+                        <input id="name" name="name" type="text" class="form-control" placeholder="Escribe tu nombre" aria-label="Nombre" aria-describedby="basic-addon2">
                         <div class="input-group-append">
 
                           <button class="btn btn-secondary" type="button" onclick="sendData()">
@@ -196,6 +210,7 @@
                         </div>
                     </div>
                     <div id="status"></div>
+                    <span style="font-family: ComicalKG; display: none">Hidden text just for loading font before canvas.</span>
                 </div>
             </div>
         </div>

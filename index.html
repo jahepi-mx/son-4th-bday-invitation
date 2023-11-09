@@ -47,7 +47,7 @@
             canvas.width = camera.viewPortWidth;
             canvas.height = camera.viewPortHeight;
             context = canvas.getContext("2d");
-            bots = [new Skye(camera), new Skye(camera), new Skye(camera)];
+            bots = [new Chase(camera), new Rubble(camera), new Skye(camera)];
             var assets = Assets.getInstance();
             assets.loadAll(onLoadAssets, onDownloadAssets);
         }

@@ -1,38 +1,41 @@
-class Rubble {
+class Marshall {
     constructor(camera) {
-        this.yLimit = 100;
+        this.yLimit = 95;
         this.camera = camera;
         this.atlas = Atlas.getInstance();
         this.assets = Assets.getInstance(); 
         this.position = new Vector();
         this.velocity = new Vector();
         this.acceleration = new Vector();
-        this.acceleration.y = -230;
+        this.acceleration.y = -260;
         this.direction = new Vector();
         this.direction.x = 1;
         this.friction = 0.98;
         this.size = new Vector();
-        this.size.x = 80;
-        this.size.y = 80;
+        this.size.x = 75;
+        this.size.y = 75;
         this.position.x = this.size.x + ((this.camera.worldWidth - this.size.x) - this.size.x) * Math.random();
         this.position.y = this.yLimit;
 
-        this.runAnimation = new Animation(7, 2);
-        this.stillAnimation = new Animation(13, 1);
-        this.shotAnimation = new Animation(21, 1);
-        this.jumpAnimation = new Animation(7, 2);
-        this.barkAnimation = new Animation(11, 1);
-        this.punchAnimation = new Animation(17, 1);
+        this.runAnimation = new Animation(6, 2);
+        this.stillAnimation = new Animation(5, 2);
+        this.shotAnimation = new Animation(30, 1);
+        this.jumpAnimation = new Animation(11, 2);
+        this.barkAnimation = new Animation(9, 1);
+        this.punchAnimation = new Animation(13, 1);
         this.jumpAnimation.stopAtSequenceNumber(1, this.onStopJump.bind(this));
         this.barkAnimation.stopAtSequenceNumber(1, this.onStopBark.bind(this));
         this.punchAnimation.stopAtSequenceNumber(1, this.onStopPunch.bind(this));
+        this.shotAnimation.stopAtSequenceNumber(1, this.onStopShot.bind(this));
 
         this.eventTime = 0;
-        this.eventTypes = ["run", "still", "shot", "jump", "bark", "run", "punch", "jump"];
-        //this.eventTypes = ["run", "jump"];
+        this.eventTypes = ["run", "still", "shot", "jump", "bark", "run", "punch", "jump", "shot"];
+        //this.eventTypes = ["run", "shot"];
         this.eventType = this.eventTypes[0];
         this.balls = [];
         this.shotTime = 0;
+        this.numberOfShots = 2;
+        this.shotsCount = 0;
 
     }
 
@@ -51,6 +54,11 @@ class Rubble {
         this.punchAnimation.stop();
     }
 
+    onStopShot() {
+        this.eventTime = 0;
+        this.shotAnimation.stop();
+    }
+
     update(dt) {
         
         this.eventTime -= dt;
@@ -60,8 +68,9 @@ class Rubble {
             this.direction.x = Math.random() < 0.5 ? 1 : -1;
             this.velocity.x = Math.abs(this.velocity.x) * this.direction.x;
             this.shotTime = 0;
+            this.shotsCount = 0;
             if (this.eventType == "jump") {
-                this.velocity.y = this.position.y < this.yLimit + this.size.y * 0.5 ? 250 : this.velocity.y;
+                this.velocity.y = this.position.y < this.yLimit + this.size.y * 0.5 ? 280 : this.velocity.y;
                 this.jumpAnimation.reset();
             }
             if (this.eventType == "bark") {
@@ -69,6 +78,9 @@ class Rubble {
             }
             if (this.eventType == "punch") {
                 this.punchAnimation.reset();
+            }
+            if (this.eventType == "shot") {
+                this.shotAnimation.reset();
             }
         }
 
@@ -97,12 +109,13 @@ class Rubble {
         if (this.eventType == "still" && Math.abs(this.velocity.x) <= 5) {
             this.velocity.x += (-this.velocity.x) * dt;
         }
-        if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
+        if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 50) {
             this.velocity.x = 0;
-            this.shotTime -= dt;
-            if (this.shotTime < 0) {
-                this.shotTime = 0.5;
-                this.balls.push(new Ball(this.camera, this.position.x, this.position.y, this.direction.x, "rock_1"));
+            this.shotTime += dt;
+            if (this.shotTime >= 0.3 && this.shotsCount < this.numberOfShots) {
+                this.shotsCount++;
+                this.shotTime = 0;
+                this.balls.push(new Splash(this.camera, this.position.x, this.position.y + 25, this.direction.x));
             }
         }
 
@@ -126,17 +139,17 @@ class Rubble {
     render(context) {
         var image = null;
         if (this.eventType == "jump") {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_jump_" + (this.jumpAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_jump_" + (this.jumpAnimation.getFrame() + 1);
         } else if (this.eventType == "shot" && Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_shoot_" + (this.shotAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_shoot_" + (this.shotAnimation.getFrame() + 1);
         } else if (this.eventType == "bark" && Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_bark_" + (this.barkAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_bark_" + (this.barkAnimation.getFrame() + 1);
         } else if (this.eventType == "punch" && Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_punch_" + (this.punchAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_punch_" + (this.punchAnimation.getFrame() + 1);
         } else if (Math.abs(this.velocity.x) <= 5) {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_still_" + (this.stillAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_still_" + (this.stillAnimation.getFrame() + 1);
         } else if (Math.abs(this.velocity.x) <= 250) {
-            image = (this.direction.x > 0 ? "" : "left_") + "rubble_run_" + (this.runAnimation.getFrame() + 1);
+            image = (this.direction.x > 0 ? "" : "left_") + "marshall_run_" + (this.runAnimation.getFrame() + 1);
         }
 
         if (image != null) {

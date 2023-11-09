@@ -126,7 +126,7 @@ class Chase {
             this.shotTime -= dt;
             if (this.shotTime < 0) {
                 this.shotTime = 0.5;
-                this.balls.push(new Ball(this.camera, this.position.x, this.position.y, this.direction.x, "ball_1"));
+                this.balls.push(new Ball(this.camera, this.position.x, this.position.y, this.direction.x, Math.random() < 0.5 ? "ball_1" : "rock_1"));
             }
         }
 
